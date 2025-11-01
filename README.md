@@ -68,9 +68,50 @@ DreamStruct leverages **Google Cloud services** for scalability, AI intelligence
 
 ---
 
+REPO STRUCTURE 
 
-
-
+dreamstruct-ai-architecture/
+├─ frontend/                      # React + Three.js / Babylon.js frontend
+│  ├─ public/
+│  │   └─ index.html
+│  ├─ src/
+│  │   ├─ App.tsx                # Main 3D scene and components
+│  │   ├─ components/            # UI components (panels, buttons)
+│  │   ├─ hooks/                 # Frontend-specific React hooks
+│  │   └─ styles.css
+│  ├─ package.json
+│  └─ vite.config.ts
+│
+├─ backend/                       # Node.js / TypeScript API
+│  ├─ index.ts                    # Main server entrypoint
+│  ├─ routes/
+│  │   ├─ generateModel.ts        # Generate 3D models from AI
+│  │   ├─ analyzeFeasibility.ts   # Feasibility analysis endpoint
+│  │   └─ getTemplate.ts          # Serve Skeleton Crew templates
+│  ├─ utils/                      # Utility functions (AI calls, storage helpers)
+│  └─ package.json
+│
+├─ templates/                     # Skeleton Crew templates
+│  ├─ FreeformDesigner/
+│  │   └─ exampleModel.json       # Example 3D model JSON/GLTF
+│  └─ FeasibilityOptimizer/
+│      └─ exampleAnalysis.json    # Example feasibility analysis output
+│
+├─ .kiro/                         # AI hooks, specs, and steering docs
+│  ├─ hooks/                      # Automate object placement, floating behaviors
+│  ├─ specs/                      # Architectural constraints (max height, floating, materials)
+│  └─ steering/                   # Guides for aesthetics, feasibility, AI tuning
+│
+├─ assets/                        # Textures, icons, GIFs, 3D models
+│  ├─ textures/
+│  ├─ icons/
+│  └─ preview-gifs/
+│
+├─ README.md                       # Hackathon/project README
+├─ .gitignore
+├─ metadata.json                    # Gemini/AI Studio metadata
+├─ tsconfig.json
+└─ LICENSE
 
 
 ---
