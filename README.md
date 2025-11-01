@@ -128,7 +128,7 @@ dreamstruct-ai-architecture/
 
 ---
 
----
+
 
 ## 💡 Why AI Excites Us
 AI transforms development by:
@@ -141,7 +141,3 @@ With **Google Cloud AI + Vertex AI**, designs are **scalable, reproducible, and 
 
 ---
 
-## 📝 Instructions
-1. Clone the repo:  
-```bash
-git clone https://github.com/username/dreamstruct-ai-architecture.git
