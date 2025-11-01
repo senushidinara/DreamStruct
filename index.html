@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DreamStruct</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-color: #0a0a14;
+      --surface-color: #101024;
+      --primary-color: #00ffff;
+      --secondary-color: #ff00ff;
+      --text-color: #e0e0e0;
+      --border-color: #2a2a4a;
+      --font-family: 'Exo 2', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      font-family: var(--font-family);
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 2rem;
+      position: relative;
+    }
+    
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        linear-gradient(rgba(42, 42, 74, 0.5) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(42, 42, 74, 0.5) 1px, transparent 1px);
+      background-size: 2rem 2rem;
+      opacity: 0.2;
+      z-index: -1;
+    }
+
+    #root {
+      width: 100%;
+      max-width: 800px;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      z-index: 1;
+    }
+
+    .header {
+      text-align: center;
+    }
+
+    .header h1 {
+      font-size: 3.5rem;
+      font-weight: 500;
+      letter-spacing: 2px;
+      color: var(--primary-color);
+      text-shadow: 0 0 10px rgba(0, 255, 255, 0.5), 0 0 20px rgba(0, 255, 255, 0.3);
+      animation: glow 3s ease-in-out infinite alternate;
+    }
+
+    .header p {
+      font-size: 1.2rem;
+      color: var(--text-color);
+      opacity: 0.8;
+    }
+
+    .editor-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    
+    .theme-selector {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    
+    .select-wrapper {
+        position: relative;
+    }
+    
+    .select-wrapper .icon {
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      width: 1.2em;
+      height: 1.2em;
+      fill: var(--primary-color);
+    }
+
+    .theme-selector label {
+      font-size: 0.9rem;
+      opacity: 0.8;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    select {
+      background-color: var(--surface-color);
+      color: var(--text-color);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 0.8rem 2.5rem 0.8rem 0.8rem;
+      font-family: var(--font-family);
+      font-size: 1rem;
+      cursor: pointer;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      transition: all 0.3s;
+    }
+    
+    select:hover {
+        border-color: var(--primary-color);
+        transform: translateY(-2px);
+    }
+
+    select:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(0, 255, 255, 0.2);
+    }
+
+    textarea {
+      background-color: var(--surface-color);
+      color: var(--text-color);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 1rem;
+      font-family: var(--font-family);
+      font-size: 1.1rem;
+      min-height: 120px;
+      resize: vertical;
+      transition: all 0.3s;
+    }
+    
+    textarea:hover {
+        border-color: var(--primary-color);
+        transform: translateY(-2px);
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(0, 255, 255, 0.2), 0 0 10px rgba(0, 255, 255, 0.2) inset;
+    }
+
+    button {
+      background: linear-gradient(45deg, #00ffff, #0077ff);
+      color: var(--bg-color);
+      border: none;
+      border-radius: 8px;
+      padding: 0.8rem 1.5rem;
+      font-size: 1rem;
+      font-weight: bold;
+      font-family: var(--font-family);
+      cursor: pointer;
+      transition: box-shadow 0.3s, transform 0.1s;
+      align-self: flex-end;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    button .icon {
+        width: 1.2em;
+        height: 1.2em;
+    }
+
+    button:hover:not(:disabled) {
+      box-shadow: 0 0 15px rgba(0, 255, 255, 0.6);
+      animation: pulse 1.5s infinite;
+    }
+    
+    button:active:not(:disabled) {
+        transform: scale(0.98);
+    }
+
+    button:disabled {
+      background: #555;
+      color: #999;
+      cursor: not-allowed;
+    }
+
+    .result-container, .loading-container, .error-container {
+      background-color: var(--surface-color);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 1.5rem;
+      animation: fadeIn 0.5s ease-in-out;
+    }
+    
+    .loading-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1.5rem;
+      flex-direction: column;
+      padding: 2rem;
+    }
+    
+    .futuristic-loader {
+      width: 60px;
+      height: 60px;
+      position: relative;
+    }
+    
+    .futuristic-loader div {
+      position: absolute;
+      border: 3px solid transparent;
+      border-radius: 50%;
+      animation: spin 1.5s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+    }
+
+    .futuristic-loader div:nth-child(1) {
+      width: 100%;
+      height: 100%;
+      border-top-color: var(--primary-color);
+      animation-delay: -0.4s;
+    }
+    .futuristic-loader div:nth-child(2) {
+      width: 80%;
+      height: 80%;
+      top: 10%;
+      left: 10%;
+      border-left-color: var(--primary-color);
+      animation-delay: -0.2s;
+    }
+    .futuristic-loader div:nth-child(3) {
+      width: 60%;
+      height: 60%;
+      top: 20%;
+      left: 20%;
+      border-bottom-color: var(--primary-color);
+    }
+
+    .result-container h2 {
+        color: var(--primary-color);
+        margin-bottom: 0.5rem;
+        font-size: 1.8rem;
+    }
+
+    .result-container p {
+        margin-bottom: 1rem;
+        line-height: 1.7;
+        font-size: 1.1rem;
+    }
+
+    .canvas-container {
+      height: 500px;
+      width: 100%;
+      background-color: #000;
+      border-radius: 8px;
+      margin-top: 1rem;
+      cursor: grab;
+    }
+    .canvas-container:active {
+        cursor: grabbing;
+    }
+    
+    .analyzer-section {
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 1px solid var(--border-color);
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .analyze-button {
+      background: linear-gradient(45deg, var(--secondary-color), #7700ff);
+      align-self: center;
+    }
+    
+    .analyze-button:hover:not(:disabled) {
+        box-shadow: 0 0 25px rgba(255, 0, 255, 0.8);
+        transform: translateY(-2px);
+        animation: pulse 1.5s infinite;
+    }
+    
+    .analysis-results {
+        margin-top: 1rem;
+        display: grid;
+        gap: 1.5rem;
+        grid-template-columns: 1fr;
+    }
+    
+    @media (min-width: 768px) {
+      .analysis-results {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .analysis-category {
+      background: linear-gradient(145deg, rgba(32, 2, 44, 0.4), rgba(20, 20, 44, 0.3));
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 1.5rem;
+      transition: all 0.3s ease-in-out;
+    }
+
+    .analysis-category:hover {
+      transform: translateY(-4px);
+      border-color: rgba(255, 0, 255, 0.5);
+      box-shadow: 0 0 20px rgba(255, 0, 255, 0.3);
+    }
+    
+    .analysis-category h3 {
+        color: var(--secondary-color);
+        margin-bottom: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border-bottom: 1px solid rgba(255, 0, 255, 0.3);
+        padding-bottom: 0.5rem;
+    }
+    
+    .analysis-category p {
+        font-size: 1rem;
+        opacity: 0.9;
+        line-height: 1.6;
+    }
+
+    .error-container {
+        color: #ff6b6b;
+        background-color: rgba(255, 107, 107, 0.1);
+        border-color: rgba(255, 107, 107, 0.3);
+    }
+    
+    .simulation-section {
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 1px solid var(--border-color);
+        text-align: center;
+    }
+    
+    .simulation-button {
+      background: linear-gradient(45deg, #00ff77, #00aaff);
+      align-self: center;
+    }
+    
+    .simulation-button:hover:not(:disabled) {
+        box-shadow: 0 0 25px rgba(0, 255, 119, 0.8);
+        transform: translateY(-2px);
+        animation: pulse 1.5s infinite;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    
+    @keyframes glow {
+        from {
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5), 0 0 20px rgba(0, 255, 255, 0.3);
+        }
+        to {
+            text-shadow: 0 0 20px rgba(0, 255, 255, 0.8), 0 0 30px rgba(0, 255, 255, 0.5);
+        }
+    }
+    
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+        box-shadow: inherit;
+      }
+      50% {
+        transform: scale(1.03);
+      }
+      100% {
+        transform: scale(1);
+        box-shadow: inherit;
+      }
+    }
+
+  </style>
+<script type="importmap">
+{
+  "imports": {
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.28.0",
+    "react": "https://esm.sh/react@18.3.1",
+    "react-dom/client": "https://esm.sh/react-dom@18.3.1/client",
+    "three": "https://esm.sh/three@0.163.0",
+    "@react-three/fiber": "https://esm.sh/@react-three/fiber@8.16.2",
+    "@react-three/drei": "https://esm.sh/@react-three/drei@9.105.4",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/"
+  }
+}
+</script>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>
