@@ -68,8 +68,9 @@ DreamStruct leverages **Google Cloud services** for scalability, AI intelligence
 
 ---
 
-REPO STRUCTURE 
+## 📦 Repo Structure: dreamstruct-ai-architecture
 
+```
 dreamstruct-ai-architecture/
 ├─ frontend/                      # React + Three.js / Babylon.js frontend
 │  ├─ public/
@@ -107,12 +108,12 @@ dreamstruct-ai-architecture/
 │  ├─ icons/
 │  └─ preview-gifs/
 │
-├─ README.md                       # Hackathon/project README
+├─ README.md                      # Hackathon/project README
 ├─ .gitignore
-├─ metadata.json                    # Gemini/AI Studio metadata
+├─ metadata.json                  # Gemini/AI Studio metadata
 ├─ tsconfig.json
 └─ LICENSE
-
+```
 
 ---
 
